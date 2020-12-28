@@ -48,6 +48,12 @@ class Line():
     def getLenght(self):
         return math.sqrt((self.x2 - self.x1)*(self.x2 - self.x1) + (self.y2 - self.y1)*(self.y2 - self.y1))
 
+    def getEquation(self):
+        a = self.y1 - self.y2
+        b = self.x2 - self.x1
+        c = (self.x1 - self.x2)*self.y1 + (self.y2 - self.y1)*self.x1
+        return (a, b, c)
+
 
 image = cv2.imread("2.png")
 hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
@@ -97,6 +103,8 @@ for i in range(0, len(linee)-1):
         if isEqual(linee[i], linee[j]):
             newLines[i].append(linee[j])
 
+newLines.append([linee[-1]])
+
 groups = []
 
 for i, lines in enumerate(newLines):  # O(n^34567890)
@@ -110,7 +118,7 @@ for i, lines in enumerate(newLines):  # O(n^34567890)
         if not x:
             groups[i].append(line)
 
-groups = [x for x in groups if x != []]
+groups = [x for x in groups if x != []] # cancello le liste vuote
 
 for i, group in enumerate(groups):
     h = (len(groups) - i) / len(groups)
@@ -118,11 +126,74 @@ for i, group in enumerate(groups):
     v = 1
     for line in group:
         cv2.line(line_image, (line.x1, line.y1),
-
                  (line.x2, line.y2), hsv2rgb(h, s, v), 2)
 
-# Draw the lines on the  image
-lines_edges = cv2.addWeighted(image, 0.2, line_image, 1, 0)
+lines_edges = cv2.addWeighted(image, 0.8, line_image, 1, 0)
 cv2.imshow("lines_edges", lines_edges)
+
+frameLines = []
+
+for group in groups:
+    # totalM = 0
+    # totalQ = 0
+    totalA = 0
+    totalB = 0
+    totalC = 0
+
+    for i, line in enumerate(group):
+        #     totalM += line.getM()
+        #     totalQ += line.getQ()
+        # totalM = totalM/len(group)
+        # totalQ = totalQ/len(group)
+
+        a, b, c = line.getEquation()  # ax + by + c = 0
+
+        totalA += a
+        totalB += b
+        totalC += c
+        
+    a = totalA/len(group)
+    b = totalB/len(group)
+    c = totalC/len(group)
+
+    x1 = 0
+    y1 = -c / b
+
+    x2 = image.shape[1]
+    y2 = -(c + a*x2) / b
+
+    if(y1 > 0 and y1 < image.shape[0] and y2 > 0 and y2 < image.shape[0]):
+        frameLines.append(Line(int(round(x1)), int(round(y1)),
+                           int(round(x2)), int(round(y2))))
+    else:
+        y1 = 0
+        x1 = -c/a
+
+        y2 = image.shape[0]
+        x2 = -(c + b*y2) / a
+
+        frameLines.append(Line(int(round(x1)), int(round(y1)),
+                           int(round(x2)), int(round(y2))))
+
+    # x1 = 0
+    # y1 = totalM*x1 + totalQ
+    # x2 = image.shape[0]
+    # y2 = totalM*x2 + totalQ
+
+grouped_image = np.copy(image) * 0
+
+for line in frameLines:
+    cv2.line(grouped_image, (line.x1, line.y1),
+             (line.x2, line.y2), (255, 255, 255), 2)
+
+grouped_lines = cv2.addWeighted(image, 0.8, grouped_image, 1, 0)
+cv2.imshow("grouped_lines", grouped_lines)
+
+for line in frameLines:
+    cv2.line(line_image, (line.x1, line.y1),
+             (line.x2, line.y2), (255, 255, 255), 2)
+
+mix = cv2.addWeighted(image, 0.8, line_image, 1, 0)
+cv2.imshow("mix", mix)
 
 cv2.waitKey(0)
