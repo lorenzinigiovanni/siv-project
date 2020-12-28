@@ -10,33 +10,13 @@ import colorsys
 
 
 def isEqual(l1,  l2):
-
-    length1 = math.sqrt((l1.x2 - l1.x1)*(l1.x2 - l1.x1) +
-                        (l1.y2 - l1.y1)*(l1.y2 - l1.y1))
-    length2 = math.sqrt((l2.x2 - l2.x1)*(l2.x2 - l2.x1) +
-                        (l2.y2 - l2.y1)*(l2.y2 - l2.y1))
-
     product = (l1.x2 - l1.x1)*(l2.x2 - l2.x1) + (l1.y2 - l1.y1)*(l2.y2 - l2.y1)
 
-    if (abs(product / (length1 * length2)) < math.cos(math.pi / 60)):
+    if (abs(product / (l1.getLenght() * l2.getLenght())) < math.cos(math.pi / 60)):
         return False
 
-    # mx1 = (l1.x1 + l1.x2) * 0.5
-    # mx2 = (l2.x1 + l2.x2) * 0.5
+    dist = abs(l1.getQ() - l2.getQ()) / math.sqrt(1 + abs(l1.getM()*l2.getM()))
 
-    # my1 = (l1.y1 + l1.y2) * 0.5
-    # my2 = (l2.y1 + l2.y2) * 0.5
-    # dist = math.sqrt((mx1 - mx2)*(mx1 - mx2) + (my1 - my2)*(my1 - my2)
-
-    m1 = (l1.y2 - l1.y1) / (l1.x2 - l1.x1)
-    m2 = (l2.y2 - l2.y1) / (l2.x2 - l2.x1)
-
-    q1 = -(m1*l1.x1 + l1.y1)
-    q2 = -(m2*l2.x1 + l2.y1)
-
-    dist = abs(q1 - q2) / math.sqrt(1 + abs(m1*m2))
-
-    # if (dist > max(length1, length2) * 0.5):
     if (dist > 100):
         return False
 
@@ -58,6 +38,15 @@ class Line():
         self.x2 = x2
         self.y1 = y1
         self.y2 = y2
+
+    def getM(self):
+        return (self.y2 - self.y1) / (self.x2 - self.x1)
+
+    def getQ(self):
+        return -(self.getM()*self.x1 + self.y1)
+
+    def getLenght(self):
+        return math.sqrt((self.x2 - self.x1)*(self.x2 - self.x1) + (self.y2 - self.y1)*(self.y2 - self.y1))
 
 
 image = cv2.imread("2.png")
