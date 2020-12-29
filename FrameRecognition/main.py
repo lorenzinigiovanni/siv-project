@@ -15,7 +15,15 @@ def isEqual(l1,  l2):
     if (abs(product / (l1.getLenght() * l2.getLenght())) < math.cos(math.pi / 60)):
         return False
 
-    dist = abs(l1.getQ() - l2.getQ()) / math.sqrt(1 + abs(l1.getM()*l2.getM()))
+    a1, b1, c1 = l1.getEquation()
+    a2, b2, c2 = l2.getEquation()
+
+    dist = math.inf
+
+    if(a1/b1 == math.nan or abs(a1/b1) > 1):
+        dist = abs(c1/a1 - c2/a2) / math.sqrt(1 + abs((b1/a1) * (b2/a2)))
+    else:
+        dist = abs(c1/b1 - c2/b2) / math.sqrt(1 + abs((a1/b1) * (a2/b2)))
 
     if (dist > 100):
         return False
@@ -134,37 +142,34 @@ cv2.imshow("lines_edges", lines_edges)
 frameLines = []
 
 for group in groups:
-    # totalM = 0
-    # totalQ = 0
     totalA = 0
     totalB = 0
     totalC = 0
 
     for i, line in enumerate(group):
-        #     totalM += line.getM()
-        #     totalQ += line.getQ()
-        # totalM = totalM/len(group)
-        # totalQ = totalQ/len(group)
-
-        a, b, c = line.getEquation()  # ax + by + c = 0
+        a, b, c = line.getEquation() # ax + by + c = 0
 
         totalA += a
         totalB += b
         totalC += c
-        
+
     a = totalA/len(group)
     b = totalB/len(group)
     c = totalC/len(group)
 
-    x1 = 0
-    y1 = -c / b
+    y1 = 0
+    y2 = 0
 
-    x2 = image.shape[1]
-    y2 = -(c + a*x2) / b
+    if (b != 0):
+        x1 = 0
+        y1 = -c / b
 
-    if(y1 > 0 and y1 < image.shape[0] and y2 > 0 and y2 < image.shape[0]):
+        x2 = image.shape[1]
+        y2 = -(c + a*x2) / b
+
+    if (y1 > 0 and y1 < image.shape[0] and y2 > 0 and y2 < image.shape[0]):
         frameLines.append(Line(int(round(x1)), int(round(y1)),
-                           int(round(x2)), int(round(y2))))
+                               int(round(x2)), int(round(y2))))
     else:
         y1 = 0
         x1 = -c/a
@@ -173,12 +178,7 @@ for group in groups:
         x2 = -(c + b*y2) / a
 
         frameLines.append(Line(int(round(x1)), int(round(y1)),
-                           int(round(x2)), int(round(y2))))
-
-    # x1 = 0
-    # y1 = totalM*x1 + totalQ
-    # x2 = image.shape[0]
-    # y2 = totalM*x2 + totalQ
+                               int(round(x2)), int(round(y2))))
 
 grouped_image = np.copy(image) * 0
 
