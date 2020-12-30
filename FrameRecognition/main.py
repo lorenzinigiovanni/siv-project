@@ -63,7 +63,7 @@ class Line():
         return True
 
 
-image = cv2.imread("2.png")
+image = cv2.imread("../Images/02.png")
 hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 hsv_image = cv2.GaussianBlur(hsv_image, (9, 9), 0)
 
