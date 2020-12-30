@@ -62,6 +62,18 @@ class Line():
 
         return True
 
+    def getIntersectionPoint(self, line):
+        a1, b1, c1 = self.getEquation()
+        a2, b2, c2 = line.getEquation()
+
+        if (a1*b2 - a2*b1 == 0):
+            return (-1, -1)
+
+        y = round((c1*a2 - c2*a1) / (a1*b2 - a2*b1))
+        x = round((b1*c2 - b2*c1) / (a1*b2 - a2*b1))
+
+        return (x, y)
+
 
 image = cv2.imread("../Images/02.png")
 
