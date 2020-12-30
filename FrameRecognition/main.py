@@ -64,6 +64,10 @@ class Line():
 
 
 image = cv2.imread("../Images/02.png")
+
+image = imutils.resize(image, height=300)
+originalImage = image
+
 hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 hsv_image = cv2.GaussianBlur(hsv_image, (9, 9), 0)
 
@@ -72,9 +76,7 @@ mask1 = cv2.inRange(hsv_image, (10, 95, 170), (20, 255, 255))
 target = cv2.bitwise_and(image, image, mask=mask1)
 # cv2.imshow("target.png", target)
 
-image = imutils.resize(target, height=300)
-
-gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+gray = cv2.cvtColor(target, cv2.COLOR_BGR2GRAY)
 
 opened = cv2.morphologyEx(gray, cv2.MORPH_OPEN,
                           cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5)))
