@@ -114,19 +114,26 @@ for i in range(0, len(linee)-1):
 newLines.append([linee[-1]])
 
 groups = []
+while len(newLines) > 0:
+    first, *rest = newLines
+    first = set(first)
 
-for i, lines in enumerate(newLines):  # O(n^34567890)
-    groups.append([])
-    for line in lines:
-        x = False
-        for group in groups:
-            for groupLine in group:
-                if(groupLine == line):
-                    x = True
-        if not x:
-            groups[i].append(line)
+    lf = -1
+    while len(first) > lf:
+        lf = len(first)
 
-groups = [x for x in groups if x != []] # cancello le liste vuote
+        rest2 = []
+        for r in rest:
+            if len(first.intersection(set(r))) > 0:
+                first |= set(r)
+            else:
+                rest2.append(r)
+        rest = rest2
+
+    groups.append(first)
+    newLines = rest
+
+groups = [x for x in groups if x != []]  # cancello le liste vuote
 
 for i, group in enumerate(groups):
     h = (len(groups) - i) / len(groups)
