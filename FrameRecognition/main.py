@@ -9,28 +9,6 @@ import random
 import colorsys
 
 
-def isEqual(l1,  l2):
-    product = (l1.x2 - l1.x1)*(l2.x2 - l2.x1) + (l1.y2 - l1.y1)*(l2.y2 - l2.y1)
-
-    if (abs(product / (l1.getLenght() * l2.getLenght())) < math.cos(math.pi / 60)):
-        return False
-
-    a1, b1, c1 = l1.getEquation()
-    a2, b2, c2 = l2.getEquation()
-
-    dist = math.inf
-
-    if(a1/b1 == math.nan or abs(a1/b1) > 1):
-        dist = abs(c1/a1 - c2/a2) / math.sqrt(1 + abs((b1/a1) * (b2/a2)))
-    else:
-        dist = abs(c1/b1 - c2/b2) / math.sqrt(1 + abs((a1/b1) * (a2/b2)))
-
-    if (dist > 100):
-        return False
-
-    return True
-
-
 def hsv2rgb(h,  s,  v):
     return tuple(round(i * 255) for i in colorsys.hsv_to_rgb(h,  s,  v))
 
@@ -62,6 +40,28 @@ class Line():
         c = (self.x1 - self.x2)*self.y1 + (self.y2 - self.y1)*self.x1
         return (a, b, c)
 
+    def isEqual(self,  line):
+        product = (self.x2 - self.x1)*(line.x2 - line.x1) + \
+            (self.y2 - self.y1)*(line.y2 - line.y1)
+
+        if (abs(product / (self.getLenght() * line.getLenght())) < math.cos(math.pi / 60)):
+            return False
+
+        a1, b1, c1 = self.getEquation()
+        a2, b2, c2 = line.getEquation()
+
+        dist = math.inf
+
+        if(a1/b1 == math.nan or abs(a1/b1) > 1):
+            dist = abs(c1/a1 - c2/a2) / math.sqrt(1 + abs((b1/a1) * (b2/a2)))
+        else:
+            dist = abs(c1/b1 - c2/b2) / math.sqrt(1 + abs((a1/b1) * (a2/b2)))
+
+        if (dist > 25):
+            return False
+
+        return True
+
 
 image = cv2.imread("2.png")
 hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
@@ -90,7 +90,7 @@ threshold = 50  # minimum number of votes (intersections in Hough grid cell)
 # minimum number of pixels making up a line
 min_line_length = image.shape[0] * 0.4
 # maximum gap in pixels between connectable line segments
-max_line_gap = min_line_length*0.5
+max_line_gap = min_line_length * 0.5
 line_image = np.copy(image) * 0  # creating a blank to draw lines on
 
 # Run Hough on edge detected image
@@ -108,7 +108,7 @@ newLines = []
 for i in range(0, len(linee)-1):
     newLines.append([linee[i]])
     for j in range(i+1, len(linee)):
-        if isEqual(linee[i], linee[j]):
+        if linee[i].isEqual(linee[j]):
             newLines[i].append(linee[j])
 
 newLines.append([linee[-1]])
@@ -147,7 +147,7 @@ for group in groups:
     totalC = 0
 
     for i, line in enumerate(group):
-        a, b, c = line.getEquation() # ax + by + c = 0
+        a, b, c = line.getEquation()
 
         totalA += a
         totalB += b
