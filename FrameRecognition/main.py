@@ -217,4 +217,18 @@ for line in frameLines:
 mix = cv2.addWeighted(image, 0.8, line_image, 1, 0)
 cv2.imshow("mix", mix)
 
+pointsImage = np.copy(image) * 0
+
+intersectionPoints = []
+
+for i in range(0, len(frameLines)-1):
+    for j in range(i+1, len(frameLines)):
+        x, y = frameLines[i].getIntersectionPoint(frameLines[j])
+        if (y > 0 and y < image.shape[0] and x > 0 and x < image.shape[1]):
+            intersectionPoints.append((x, y))
+            cv2.circle(pointsImage, (x, y), 5, (216, 149, 18), -1)
+
+points = cv2.addWeighted(image, 0.8, pointsImage, 1, 0)
+cv2.imshow("points", points)
+
 cv2.waitKey(0)
