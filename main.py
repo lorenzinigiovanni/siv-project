@@ -25,6 +25,20 @@ frameColor = getFeatureSampleAverageColour(resized)
 preprocessedFrame = preprocessingFrame(resized, frameColor)
 houghLines = houghLines(preprocessedFrame)
 groups = makeGroups(houghLines)
+
+line_image = np.copy(resized) * 0
+
+for i, group in enumerate(groups):
+    h = (len(groups) - i) / len(groups)
+    s = 1
+    v = 1
+    for line in group:
+        cv2.line(line_image, (line.x1, line.y1),
+                 (line.x2, line.y2), hsv2rgb(h, s, v), 2)
+
+lines_edges = cv2.addWeighted(resized, 0.8, line_image, 1, 0)
+cv2.imshow("lines_edges", lines_edges)
+
 lines = mathLines(
     groups, preprocessedFrame.shape[1], preprocessedFrame.shape[0])
 warped = warpedImage(lines, resized)
