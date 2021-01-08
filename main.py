@@ -12,14 +12,17 @@ from borders import houghLines, makeGroups, mathLines
 from preprocessing import preprocessingFrame, resize
 from perspective import fourPointTransform, orderPoints, warpedImage
 from featureSample import getFeatureSampleAverageColour, getFeatureSampleHistogram
-from utils import getColorMean, getHistogram
+from utils import hsv2rgb, rgb2hsv, getColorMean, getHistogram
 from recognition import recognitionByColor, recognitionByHistogram
 
 
 source = cv2.imread("Images/02.png")
 resized = resize(source)
 
-preprocessedFrame = preprocessingFrame(resized)
+print("Select frame")
+frameColor = getFeatureSampleAverageColour(resized)
+
+preprocessedFrame = preprocessingFrame(resized, frameColor)
 houghLines = houghLines(preprocessedFrame)
 groups = makeGroups(houghLines)
 lines = mathLines(
