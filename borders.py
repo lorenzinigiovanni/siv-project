@@ -72,7 +72,7 @@ def mathLines(groups, sizeX, sizeY):
         totalB = 0
         totalC = 0
 
-        for i, line in enumerate(group):
+        for line in group:
             a, b, c = line.getEquation()
 
             totalA += a
