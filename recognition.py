@@ -45,10 +45,10 @@ def recognitionByHistogram(sixths, beeHistogram, openCellHistogram, closedCellHi
             closedCellHistogram, meanHistogram, cv2.HISTCMP_CORREL)
 
         if (beeHistDifference > openCellHistDifference and beeHistDifference > closeCellHistDifference):
-            results.append(1)
+            results.append("Bee")
         elif (openCellHistDifference > beeHistDifference and openCellHistDifference > closeCellHistDifference):
-            results.append(2)
+            results.append("Open")
         elif (closeCellHistDifference > beeHistDifference and closeCellHistDifference > openCellHistDifference):
-            results.append(3)
+            results.append("Close")
 
     return results
