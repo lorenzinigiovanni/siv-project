@@ -21,6 +21,7 @@ source = cv2.imread("Images/02.png")
 frameAuto = False
 
 resized = resize(source)
+warped = resized
 
 if(frameAuto):
     print("Select frame")
@@ -48,10 +49,11 @@ if(frameAuto):
     warped = warpedImage(lines, resized)
 else:
     corners = []
-    coordinateStore = MousePoints("Select", resized)
+    coordinateStore = MousePoints("Select inner corners of the frame", resized)
 
     print("Select inner corners of the frame")
     corners, _ = coordinateStore.getpt(4)
+    cv2.destroyWindow("Select inner corners of the frame")
 
     pts = np.array(corners, dtype="float32")
     warped = fourPointTransform(resized, pts)
@@ -70,7 +72,7 @@ closedCellHistogram = getFeatureSampleHistogram(warped)
 
 sixths = []
 
-for yy in range(0, 2):  
+for yy in range(0, 2):
     for xx in range(0, 3):
         x = warped.shape[1]
         y = warped.shape[0]
@@ -80,7 +82,8 @@ for yy in range(0, 2):
         xEnd = (1 + xx) * (x / 3)
         yEnd = (1 + yy) * (y / 2)
 
-        sixths.append(warped[round(yStart):round(yEnd), round(xStart):round(xEnd)])
+        sixths.append(warped[round(yStart):round(
+            yEnd), round(xStart):round(xEnd)])
 
 # colorDiscrimination = recognitionByColor(
 #     sixths, beeColour, openCellColour, closeCellColour)

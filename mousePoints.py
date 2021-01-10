@@ -3,35 +3,36 @@ import numpy as np
 
 
 class MousePoints:
-    def __init__(self, windowname, img):
+    def __init__(self, windowname, img, boxDim=0):
         self.windowname = windowname
-        self.img1 = img.copy()
-        self.img = self.img1.copy()
-        cv2.namedWindow(windowname, cv2.WINDOW_NORMAL)
-        cv2.imshow(windowname, img)
-        self.curr_pt = []
+        self.img = img.copy()
+        self.img2 = img.copy()
         self.point = []
+        self.boxDim = boxDim
 
     def select_point(self, event, x, y, flags, param):
+        self.img = self.img2.copy()
         if event == cv2.EVENT_LBUTTONDOWN:
             self.point.append([x, y])
-            cv2.circle(self.img, (x, y), 5, (0, 255, 0), -1)
-        elif event == cv2.EVENT_MOUSEMOVE:
-            self.curr_pt = [x, y]
+            cv2.circle(self.img2, (x, y), 5, (0, 255, 0), -1)
+            self.img = self.img2
+        elif event == cv2.EVENT_MOUSEMOVE and self.boxDim > 0:
+            cv2.rectangle(self.img, (round(x - self.boxDim/2), round(y - self.boxDim/2)),
+                          (round(x + self.boxDim / 2), round(y + self.boxDim / 2)), (255, 255, 255), 1)
+            cv2.imshow(self.windowname, self.img)
 
-    def getpt(self, count=1, img=None):
-        if img is not None:
-            self.img = img
-        else:
-            self.img = self.img1.copy()
-        cv2.namedWindow(self.windowname, cv2.WINDOW_NORMAL)
+    def getpt(self, count=1):
+        cv2.namedWindow(self.windowname, cv2.WINDOW_AUTOSIZE)
         cv2.imshow(self.windowname, self.img)
         cv2.setMouseCallback(self.windowname, self.select_point)
+
         self.point = []
         while(1):
             cv2.imshow(self.windowname, self.img)
             k = cv2.waitKey(20) & 0xFF
             if k == 27 or len(self.point) >= count:
                 break
+
         cv2.setMouseCallback(self.windowname, lambda *args: None)
+
         return self.point, self.img

@@ -40,7 +40,7 @@ def getFeatureSampleAverageColour(image):
 
 def getFeatureSampleHistogram(image):
     cv2.imshow("Select", image)
-    coordinateStore = MousePoints("Select", image)
+    coordinateStore = MousePoints("Select", image, 25)
 
     points, _ = coordinateStore.getpt(1)
     (x, y) = points[0][0], points[0][1]
