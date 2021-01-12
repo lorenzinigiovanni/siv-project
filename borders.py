@@ -5,6 +5,8 @@ from line import Line
 
 
 def houghLines(image):
+    y = image.shape[0]
+    
     canny = cv2.Canny(image, 225, 250)
 
     rho = 1  # distance resolution in pixels of the Hough grid
@@ -12,7 +14,7 @@ def houghLines(image):
     # minimum number of votes (intersections in Hough grid cell)
     threshold = 50
     # minimum number of pixels making up a line
-    min_line_length = canny.shape[0] * 0.4
+    min_line_length = y * 0.4
     # maximum gap in pixels between connectable line segments
     max_line_gap = min_line_length * 0.5
 
@@ -30,12 +32,12 @@ def houghLines(image):
     return linee
 
 
-def makeGroups(lines):
+def makeGroups(lines, linesDistance):
     newLines = []
     for i in range(0, len(lines)-1):
         newLines.append([lines[i]])
         for j in range(i+1, len(lines)):
-            if lines[i].isEqual(lines[j]):
+            if lines[i].isEqual(lines[j], linesDistance):
                 newLines[i].append(lines[j])
 
     newLines.append([lines[-1]])

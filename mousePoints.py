@@ -20,6 +20,20 @@ class MousePoints:
             cv2.rectangle(self.img, (round(x - self.boxDim/2), round(y - self.boxDim/2)),
                           (round(x + self.boxDim / 2), round(y + self.boxDim / 2)), (255, 255, 255), 1)
             cv2.imshow(self.windowname, self.img)
+        elif event == cv2.EVENT_MOUSEWHEEL and self.boxDim > 0:
+            if flags > 0:
+                self.boxDim += 1
+            else:
+                self.boxDim -= 1
+
+            if self.boxDim < 1:
+                self.boxDim = 1
+            elif self.boxDim > self.img.shape[0]:
+                self.boxDim = self.img.shape[0]
+
+            cv2.rectangle(self.img, (round(x - self.boxDim/2), round(y - self.boxDim/2)),
+                          (round(x + self.boxDim / 2), round(y + self.boxDim / 2)), (255, 255, 255), 1)
+            cv2.imshow(self.windowname, self.img)
 
     def getpt(self, count=1):
         cv2.namedWindow(self.windowname, cv2.WINDOW_AUTOSIZE)
@@ -35,4 +49,4 @@ class MousePoints:
 
         cv2.setMouseCallback(self.windowname, lambda *args: None)
 
-        return self.point, self.img
+        return self.point, self.boxDim

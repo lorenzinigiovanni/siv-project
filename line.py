@@ -28,7 +28,7 @@ class Line():
         c = (self.x1 - self.x2)*self.y1 + (self.y2 - self.y1)*self.x1
         return (a, b, c)
 
-    def isEqual(self,  line):
+    def isEqual(self,  line, linesDistance):
         product = (self.x2 - self.x1)*(line.x2 - line.x1) + \
             (self.y2 - self.y1)*(line.y2 - line.y1)
 
@@ -45,7 +45,7 @@ class Line():
         else:
             dist = abs(c1/b1 - c2/b2) / math.sqrt(1 + abs((a1/b1) * (a2/b2)))
 
-        if (dist > 25):
+        if (dist > linesDistance):
             return False
 
         return True

@@ -7,15 +7,16 @@ from utils import getHistogram
 
 
 def getFeatureSampleAverageColour(image):
-    cv2.imshow("Select", image)
-    coordinateStore = MousePoints("Select", image)
+    y = image.shape[0]
+    boxDim = round(y/15)
 
-    points, _ = coordinateStore.getpt(1)
+    cv2.imshow("Select", image)
+    coordinateStore = MousePoints("Select", image, boxDim)
+
+    points, boxDim = coordinateStore.getpt(1)
     (x, y) = points[0][0], points[0][1]
 
     cv2.destroyWindow("Select")
-
-    boxDim = 20
 
     if (x < boxDim):
         x = boxDim / 2
@@ -39,15 +40,16 @@ def getFeatureSampleAverageColour(image):
 
 
 def getFeatureSampleHistogram(image):
-    cv2.imshow("Select", image)
-    coordinateStore = MousePoints("Select", image, 25)
+    y = image.shape[0]
+    boxDim = round(y/10)
 
-    points, _ = coordinateStore.getpt(1)
+    cv2.imshow("Select", image)
+    coordinateStore = MousePoints("Select", image, boxDim)
+
+    points, boxDim = coordinateStore.getpt(1)
     (x, y) = points[0][0], points[0][1]
 
     cv2.destroyWindow("Select")
-
-    boxDim = 25
 
     if (x < boxDim):
         x = boxDim / 2

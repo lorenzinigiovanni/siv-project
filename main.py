@@ -17,8 +17,8 @@ from recognition import recognitionByColor, recognitionByHistogram
 from mousePoints import MousePoints
 
 
-source = cv2.imread("Images/02.png")
-frameAuto = False
+source = cv2.imread("Images/13.png")
+frameAuto = True
 
 resized = resize(source)
 warped = resized
@@ -27,9 +27,11 @@ if(frameAuto):
     print("Select frame")
     frameColor = getFeatureSampleAverageColour(resized)
 
+    linesDistance = round(resized.shape[0] / 12)
+
     preprocessedFrame = preprocessingFrame(resized, frameColor)
     houghLines = houghLines(preprocessedFrame)
-    groups = makeGroups(houghLines)
+    groups = makeGroups(houghLines, linesDistance)
 
     line_image = np.copy(resized) * 0
 
@@ -37,9 +39,9 @@ if(frameAuto):
         h = (len(groups) - i) / len(groups)
         s = 1
         v = 1
-    for line in group:
-        cv2.line(line_image, (line.x1, line.y1),
-                 (line.x2, line.y2), hsv2rgb(h, s, v), 2)
+        for line in group:
+            cv2.line(line_image, (line.x1, line.y1),
+                     (line.x2, line.y2), hsv2rgb(h, s, v), 2)
 
     lines_edges = cv2.addWeighted(resized, 0.8, line_image, 1, 0)
     cv2.imshow("lines_edges", lines_edges)

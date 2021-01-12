@@ -4,14 +4,13 @@ import imutils
 
 
 def resize(image):
-    return imutils.resize(image, height=300)
+    return imutils.resize(image, height=480)
 
 
 def preprocessingFrame(image, color):
+    y = image.shape[0]
+
     hsvImage = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    # blurred = cv2.GaussianBlur(hsvImage, (9, 9), 0)
-    # blurred = cv2.bilateralFilter(hsvImage, 15, 30, 30, cv2.BORDER_DEFAULT)
-    blurred = hsvImage
 
     hsvColor = rgb2hsv(color[2], color[1], color[0])
     h = hsvColor[0] * 255
@@ -29,14 +28,14 @@ def preprocessingFrame(image, color):
         hMin = 0
         hMax = 255
 
-    mask = cv2.inRange(blurred, (hMin, sMin, vMin), (hMax, sMax, vMax))
-    filtered = cv2.bitwise_and(blurred, blurred, mask=mask)
+    mask = cv2.inRange(hsvImage, (hMin, sMin, vMin), (hMax, sMax, vMax))
+    filtered = cv2.bitwise_and(hsvImage, hsvImage, mask=mask)
 
     gray = cv2.cvtColor(filtered, cv2.COLOR_BGR2GRAY)
 
     opened = cv2.morphologyEx(gray, cv2.MORPH_OPEN,
-                              cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5)))
+                              cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (round(y / 75), round(y / 75))))
     closed = cv2.morphologyEx(opened, cv2.MORPH_CLOSE, cv2.getStructuringElement(
-        cv2.MORPH_ELLIPSE, (3, 3)), iterations=3)
+        cv2.MORPH_ELLIPSE, (round(y/100), round(y/100))), iterations=3)
 
     return closed
