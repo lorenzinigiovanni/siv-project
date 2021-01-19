@@ -22,33 +22,40 @@ def recognitionByColor(sixths, beeColour, openCellColour, closeCellColour):
             closeCellDifference[1] ** 2 + closeCellDifference[2] ** 2
 
         if (beeSquare < openCellSquare and beeSquare < closeCellSquare):
-            results.append(1)
+            results.append("Bee")
         elif (openCellSquare < beeSquare and openCellSquare < closeCellSquare):
-            results.append(2)
+            results.append("Open")
         elif (closeCellSquare < beeSquare and closeCellSquare < openCellSquare):
-            results.append(3)
+            results.append("Close")
 
     return results
 
 
-def recognitionByHistogram(sixths, beeHistogram, openCellHistogram, closedCellHistogram):
+def recognitionByHistogram(sixths, beeHistogram, openCellHistogram, closeCellHistogram):
     results = []
 
     for sixth in sixths:
         meanHistogram = getHistogram(sixth)
 
-        beeHistDifference = cv2.compareHist(
-            beeHistogram, meanHistogram, cv2.HISTCMP_CORREL)
-        openCellHistDifference = cv2.compareHist(
-            openCellHistogram, meanHistogram, cv2.HISTCMP_CORREL)
-        closeCellHistDifference = cv2.compareHist(
-            closedCellHistogram, meanHistogram, cv2.HISTCMP_CORREL)
+        beeHistCorrelation = 0
+        openCellHistCorrelation = 0
+        closeCellHistCorrelation = 0
 
-        if (beeHistDifference > openCellHistDifference and beeHistDifference > closeCellHistDifference):
+        if beeHistogram is not None:
+            beeHistCorrelation = cv2.compareHist(
+                beeHistogram, meanHistogram, cv2.HISTCMP_CORREL)
+        if openCellHistogram is not None:
+            openCellHistCorrelation = cv2.compareHist(
+                openCellHistogram, meanHistogram, cv2.HISTCMP_CORREL)
+        if closeCellHistogram is not None:
+            closeCellHistCorrelation = cv2.compareHist(
+                closeCellHistogram, meanHistogram, cv2.HISTCMP_CORREL)
+
+        if (beeHistCorrelation > openCellHistCorrelation and beeHistCorrelation > closeCellHistCorrelation):
             results.append("Bee")
-        elif (openCellHistDifference > beeHistDifference and openCellHistDifference > closeCellHistDifference):
+        elif (openCellHistCorrelation > beeHistCorrelation and openCellHistCorrelation > closeCellHistCorrelation):
             results.append("Open")
-        elif (closeCellHistDifference > beeHistDifference and closeCellHistDifference > openCellHistDifference):
+        elif (closeCellHistCorrelation > beeHistCorrelation and closeCellHistCorrelation > openCellHistCorrelation):
             results.append("Close")
 
     return results

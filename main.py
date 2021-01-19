@@ -15,10 +15,14 @@ from featureSample import getFeatureSampleAverageColour, getFeatureSampleHistogr
 from utils import hsv2rgb, rgb2hsv, getColorMean, getHistogram
 from recognition import recognitionByColor, recognitionByHistogram
 from mousePoints import MousePoints
+from results import showResults
 
 
-source = cv2.imread("Images/13.png")
+sizeX = 3
+sizeY = 2
 frameAuto = True
+
+source = cv2.imread("Images/02.png")
 
 resized = resize(source)
 warped = resized
@@ -60,73 +64,47 @@ else:
     pts = np.array(corners, dtype="float32")
     warped = fourPointTransform(resized, pts)
 
+print("You can now select as requested")
+print("Select with left click")
+print("Skip with right click")
+print("Change box dimension with scrolwheel")
+
 print("Select bee")
-# beeColour = getFeatureSampleAverageColour(warped)
+beeColour = getFeatureSampleAverageColour(warped)
 beeHistogram = getFeatureSampleHistogram(warped)
 
 print("Select open cell")
-# openCellColour = getFeatureSampleAverageColour(warped)
+openCellColour = getFeatureSampleAverageColour(warped)
 openCellHistogram = getFeatureSampleHistogram(warped)
 
-print("Select closed cell")
-# closeCellColour = getFeatureSampleAverageColour(warped)
-closedCellHistogram = getFeatureSampleHistogram(warped)
+print("Select close cell")
+closeCellColour = getFeatureSampleAverageColour(warped)
+closeCellHistogram = getFeatureSampleHistogram(warped)
 
 sixths = []
 
-for yy in range(0, 2):
-    for xx in range(0, 3):
+for yy in range(0, sizeY):
+    for xx in range(0, sizeX):
         x = warped.shape[1]
         y = warped.shape[0]
 
-        xStart = xx * (x / 3)
-        yStart = yy * (y / 2)
-        xEnd = (1 + xx) * (x / 3)
-        yEnd = (1 + yy) * (y / 2)
+        xStart = xx * (x / sizeX)
+        yStart = yy * (y / sizeY)
+        xEnd = (1 + xx) * (x / sizeX)
+        yEnd = (1 + yy) * (y / sizeY)
 
         sixths.append(warped[round(yStart):round(
             yEnd), round(xStart):round(xEnd)])
 
-# colorDiscrimination = recognitionByColor(
-#     sixths, beeColour, openCellColour, closeCellColour)
-# print(colorDiscrimination)
+colorDiscrimination = recognitionByColor(
+    sixths, beeColour, openCellColour, closeCellColour)
 
 histogramDiscrimination = recognitionByHistogram(
-    sixths, beeHistogram, openCellHistogram, closedCellHistogram)
-print(histogramDiscrimination)
+    sixths, beeHistogram, openCellHistogram, closeCellHistogram)
 
-overlay = warped.copy() * 0
-
-counter = 0
-for yy in range(0, 2):
-    for xx in range(0, 3):
-        x = warped.shape[1]
-        y = warped.shape[0]
-
-        xStart = round(xx * (x / 3))
-        yStart = round(yy * (y / 2))
-        xEnd = round((1 + xx) * (x / 3))
-        yEnd = round((1 + yy) * (y / 2))
-
-        color = (0, 0, 0)
-
-        if (histogramDiscrimination[counter] == "Bee"):
-            color = (255, 0, 0)
-        elif (histogramDiscrimination[counter] == "Open"):
-            color = (0, 255, 0)
-        elif (histogramDiscrimination[counter] == "Close"):
-            color = (0, 0, 255)
-
-        cv2.rectangle(overlay, (xStart, yStart),
-                      (xEnd, yEnd), color, -1)
-        cv2.rectangle(overlay, (xStart, yStart),
-                      (xEnd, yEnd), (255, 255, 255), 2)
-        cv2.putText(
-            overlay, histogramDiscrimination[counter], (xStart + 10, yEnd - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
-
-        counter += 1
-
-res = cv2.addWeighted(warped, 0.7, overlay, 0.3, 1.0)
-cv2.imshow("Result", res)
+showResults(colorDiscrimination,
+            "Color Discrimination", warped, sizeX, sizeY)
+showResults(histogramDiscrimination,
+            "Histogram Discrimination", warped, sizeX, sizeY)
 
 cv2.waitKey(0)
