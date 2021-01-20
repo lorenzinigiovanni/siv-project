@@ -1,6 +1,7 @@
 import colorsys
 from cv2 import cv2
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def hsv2rgb(h,  s,  v):
@@ -41,4 +42,13 @@ def getHistogram(image):
     hist = cv2.calcHist([image], [0, 1, 2], None, [8, 8, 8],
                         [0, 256, 0, 256, 0, 256])
     hist = cv2.normalize(hist, hist).flatten()
+
+    # color = ('b', 'g', 'r')
+    # for i, col in enumerate(color):
+    #     histr = cv2.calcHist([image], [i], None, [10], [0, 256])
+    #     plt.plot(histr, color=col)
+    #     plt.xlim([0, 10])
+
+    # plt.show()
+
     return hist

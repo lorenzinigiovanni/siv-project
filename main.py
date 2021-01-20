@@ -47,11 +47,16 @@ if(frameAuto):
             cv2.line(line_image, (line.x1, line.y1),
                      (line.x2, line.y2), hsv2rgb(h, s, v), 2)
 
+    lines = mathLines(
+        groups, preprocessedFrame.shape[1], preprocessedFrame.shape[0])
+
+    for i, line in enumerate(lines):
+        cv2.line(line_image, (line.x1, line.y1),
+                 (line.x2, line.y2), (255, 255, 255), 2)
+
     lines_edges = cv2.addWeighted(resized, 0.8, line_image, 1, 0)
     cv2.imshow("lines_edges", lines_edges)
 
-    lines = mathLines(
-        groups, preprocessedFrame.shape[1], preprocessedFrame.shape[0])
     warped = warpedImage(lines, resized)
 else:
     corners = []

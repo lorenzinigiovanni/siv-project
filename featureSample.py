@@ -9,7 +9,7 @@ from utils import getHistogram
 def getFeatureSampleAverageColour(image):
     y = image.shape[0]
     boxDim = round(y / 15)
-    
+
     if (boxDim % 2 == 1):
         boxDim += 1
 
