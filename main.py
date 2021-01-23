@@ -22,7 +22,7 @@ sizeX = 3
 sizeY = 2
 frameAuto = True
 
-source = cv2.imread("Images/02.png")
+source = cv2.imread("dataset/02.png")
 
 resized = resize(source)
 warped = resized
