@@ -216,9 +216,11 @@ The main problem of this approach is given by the fact that one of the mean clas
 This problem has been encountered in many images and in particular in the image that is present in all the document as example where the mean color of the bees is the mean between the color of the opened cells and the closed ones.
 As it can be seen in the image below the first sixth is wrongly classified as "Bee" even though it is the less predominant.
 
-![Classification Color Mean](/images/classification-color-6.png)*Results of color mean method applied on sixths*
+![Classification Color Mean](/images/classification-color-6.png)  
+*Results of color mean method applied on sixths*
 
-![Classification Color Mean](/images/classification-color-1000.png)*Results of color mean method applied on small dimension areas*
+![Classification Color Mean](/images/classification-color-1000.png)  
+*Results of color mean method applied on small dimension areas*
 
 ## Histogram comparison
 
@@ -230,9 +232,11 @@ The main defect in this approach is the dependency on the area selected by the u
 If this area is not chosen in proper manner the results can be disrupted.
 For example, if in the selection of the open cell area we select an area with one bee over the cell, the histogram will be tricked and the classifier will be mislead.
 
-![Classification Histogram](/images/classification-histogram-6.png)*Results of histogram method applied on sixth*
+![Classification Histogram](/images/classification-histogram-6.png)  
+*Results of histogram method applied on sixth*
 
-![Classification Histogram](/images/classification-histogram-1000.png)*Results of histogram method applied on small dimension areas*
+![Classification Histogram](/images/classification-histogram-1000.png)  
+*Results of histogram method applied on small dimension areas*
 
 ## Color means vs histogram comparison
 
@@ -242,9 +246,11 @@ In this two images the size of the areas analyzed is very small.
 Clearly there is a limit on the minimum size of the area in which the histogram operates in an efficient way.
 In fact is that the number of occurrences of a particular color can drastically drop as the area becomes tinier, leading the classifier to an uncertain decision, because it do not have enough information (think about the bees strips).
 
-![Classification Color Mean](/images/classification-color-200.png)*Results of color mean method applied on medium dimension area*
+![Classification Color Mean](/images/classification-color-200.png)  
+*Results of color mean method applied on medium dimension area*
 
-![Classification Histogram](/images/classification-histogram-200.png)*Results of histogram method applied on medium dimension area*
+![Classification Histogram](/images/classification-histogram-200.png)  
+*Results of histogram method applied on medium dimension area*
 
 ## K-Means clustering
 
