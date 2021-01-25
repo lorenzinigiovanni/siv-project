@@ -16,6 +16,7 @@ from utils import hsv2rgb, rgb2hsv, getColorMean, getHistogram
 from recognition import recognitionByColor, recognitionByHistogram
 from mousePoints import MousePoints
 from results import showResults
+from kmeans import sklearnKMeans, cv2KMeans
 
 
 sizeX = 3
@@ -111,5 +112,11 @@ showResults(colorDiscrimination,
             "Color Discrimination", warped, sizeX, sizeY)
 showResults(histogramDiscrimination,
             "Histogram Discrimination", warped, sizeX, sizeY)
+
+skKmeansImage = sklearnKMeans(warped)
+cv2KmeansImage = cv2KMeans(warped)
+
+cv2.imshow("skKmeansImage", skKmeansImage)
+cv2.imshow("cv2KmeansImage", cv2KmeansImage)
 
 cv2.waitKey(0)
