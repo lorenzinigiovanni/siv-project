@@ -14,10 +14,13 @@
     - [Automatic frame recognition](#automatic-frame-recognition)
   - [Classes discrimination](#classes-discrimination)
 - [Results](#results)
+  - [Frame recognition](#frame-recognition-1)
   - [Color mean](#color-mean)
   - [Histogram comparison](#histogram-comparison)
   - [Color means vs histogram comparison](#color-means-vs-histogram-comparison)
   - [K-Means clustering](#k-means-clustering)
+
+<div class="page-break"></div>
 
 # Acknowledgment
 
@@ -31,6 +34,8 @@ Students:
 - Giovanni Lorenzini
 - Simone Luchetta
 - Diego Planchenstainer
+
+<div class="page-break"></div>
 
 # Introduction
 
@@ -63,6 +68,8 @@ The majority of the examples in this documents are based on this image, keep it 
 
 ![Sixths numeration](/images/sixths-numeration.png)  
 *Adopted numeration of sixths*
+
+<div class="page-break"></div>
 
 # Possibile approaches
 
@@ -110,6 +117,8 @@ Thus, it will be up to the algorithm to find whether certain types of examples a
 
 Once the process is complete, the result should be able to classify correctly the three main classes, them being bees, opened cells and closed cells.
 It is important to reiterate that the program does not know which class is which, so it is possible that one class will have some classes inside it (for example capped brood and the stock of honey can be seen as "class 3", even if the program do not know what "class 3" is).
+
+<div class="page-break"></div>
 
 # Implementation
 
@@ -201,12 +210,42 @@ elif (closeCellHistCorrelation > beeHistCorrelation and closeCellHistCorrelation
 
 Then an overlay of the results is displayed giving different color to the classes for better visual distinction. Related counts-percentages are also shown in the terminal window.
 
+<div class="page-break"></div>
+
 # Results
 
 The result of the various methodology will be described below.
 Before doing that a premise is needed. As explained before historically the frame is subdivided into six pieces to make manual classification easier.
 Since for a program there is no substantial difference into making 6 or 100 parts we have embedded the possibility to modify the number of section of the frame, thus their dimensions.
 In the discussion below there will be some images subdivided in sixth and other in more parts in order to better analyze the behavior of the algorithms applied.
+
+## Frame recognition
+
+| Image | Manual frame selection | Automatic frame recognition |
+| :---: | :--------------------: | :-------------------------: |
+|  01   |        &#10003;        |          &#10003;           |
+|  02   |        &#10003;        |          &#10003;           |
+|  03   |        &#10003;        |          &#10003;           |
+|  04   |        &#10003;        |          &#10005;           |
+|  05   |        &#10003;        |          &#10005;           |
+|  06   |        &#10003;        |          &#10005;           |
+|  07   |        &#10003;        |          &#10003;           |
+|  08   |        &#10003;        |          &#10003;           |
+|  09   |        &#10003;        |          &#10003;           |
+|  10   |        &#10003;        |          &#10005;           |
+|  11   |        &#10003;        |          &#10003;           |
+|  12   |        &#10003;        |          &#10005;           |
+|  13   |        &#10003;        |          &#10005;           |
+|  14   |        &#10003;        |          &#10005;           |
+|  15   |        &#10003;        |          &#10005;           |
+|  16   |        &#10003;        |          &#10005;           |
+|  17   |        &#10003;        |          &#10003;           |
+|  18   |        &#10003;        |          &#10005;           |
+|  19   |        &#10003;        |          &#10005;           |
+|  20   |        &#10003;        |          &#10005;           |
+|  21   |        &#10003;        |          &#10005;           |
+|  22   |        &#10003;        |          &#10005;           |
+
 
 ## Color mean
 
@@ -251,6 +290,274 @@ In fact is that the number of occurrences of a particular color can drastically 
 
 ![Classification Histogram](/images/classification-histogram-200.png)  
 *Results of histogram method applied on medium dimension area*
+
+<table>
+  <tr>
+    <th>Image</th>
+    <th colspan="4">Color mean</th>
+    <th colspan="4">Histogram comparison</th>
+  </tr>
+  <tr>
+    <th>File</th>
+    <th>Bees</th>
+    <th>Open cells</th>
+    <th>Close cells</th>
+    <th>Accuracy</th>
+    <th>Bees</th>
+    <th>Open cells</th>
+    <th>Close cells</th>
+    <th>Accuracy</th>
+  </tr>
+  <tr>
+    <td>01</td>
+    <td>4</td>
+    <td>0</td>
+    <td>8</td>
+    <td>67%</td>
+    <td>0</td>
+    <td>1</td>
+    <td>11</td>
+    <td>92%</td>
+  </tr>
+  <tr>
+    <td>02</td>
+    <td>7</td>
+    <td>1</td>
+    <td>4</td>
+    <td>67%</td>
+    <td>3</td>
+    <td>1</td>
+    <td>8</td>
+    <td>100%</td>
+  </tr>
+  <tr>
+    <td>03</td>
+    <td>5</td>
+    <td>0</td>
+    <td>7</td>
+    <td>25%</td>
+    <td>9</td>
+    <td>3</td>
+    <td>0</td>
+    <td>83%</td>
+  </tr>
+  <tr>
+    <td>04</td>
+    <td>5</td>
+    <td>3</td>
+    <td>4</td>
+    <td>58%</td>
+    <td>5</td>
+    <td>2</td>
+    <td>5</td>
+    <td>75%</td>
+  </tr>
+  <tr>
+    <td>05</td>
+    <td>11</td>
+    <td>0</td>
+    <td>1</td>
+    <td>33%</td>
+    <td>8</td>
+    <td>4</td>
+    <td>0</td>
+    <td>67%</td>
+  </tr>
+  <tr>
+    <td>06</td>
+    <td>9</td>
+    <td>1</td>
+    <td>2</td>
+    <td>42%</td>
+    <td>9</td>
+    <td>0</td>
+    <td>3</td>
+    <td>67%</td>
+  </tr>
+  <tr>
+    <td>07</td>
+    <td>11</td>
+    <td>1</td>
+    <td>0</td>
+    <td>83%</td>
+    <td>12</td>
+    <td>0</td>
+    <td>0</td>
+    <td>92%</td>
+  </tr>
+  <tr>
+    <td>08</td>
+    <td>10</td>
+    <td>1</td>
+    <td>1</td>
+    <td>92%</td>
+    <td>11</td>
+    <td>1</td>
+    <td>0</td>
+    <td>100%</td>
+  </tr>
+  <tr>
+    <td>09</td>
+    <td>0</td>
+    <td>11</td>
+    <td>1</td>
+    <td>25%</td>
+    <td>3</td>
+    <td>2</td>
+    <td>7</td>
+    <td>92%</td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>9</td>
+    <td>0</td>
+    <td>3</td>
+    <td>58%</td>
+    <td>4</td>
+    <td>0</td>
+    <td>8</td>
+    <td>100%</td>
+  </tr>
+  <tr>
+    <td>11</td>
+    <td>1</td>
+    <td>0</td>
+    <td>11</td>
+    <td>58%</td>
+    <td>6</td>
+    <td>0</td>
+    <td>6</td>
+    <td>100%</td>
+  </tr>
+  <tr>
+    <td>12</td>
+    <td>12</td>
+    <td>0</td>
+    <td>0</td>
+    <td>92%</td>
+    <td>11</td>
+    <td>0</td>
+    <td>1</td>
+    <td>100%</td>
+  </tr>
+  <tr>
+    <td>13</td>
+    <td>0</td>
+    <td>0</td>
+    <td>12</td>
+    <td>92%</td>
+    <td>1</td>
+    <td>0</td>
+    <td>11</td>
+    <td>100%</td>
+  </tr>
+  <tr>
+    <td>14</td>
+    <td>12</td>
+    <td>0</td>
+    <td>0</td>
+    <td>92%</td>
+    <td>10</td>
+    <td>2</td>
+    <td>0</td>
+    <td>92%</td>
+  </tr>
+  <tr>
+    <td>15</td>
+    <td>6</td>
+    <td>6</td>
+    <td>0</td>
+    <td>92%</td>
+    <td>8</td>
+    <td>4</td>
+    <td>0</td>
+    <td>92%</td>
+  </tr>
+  <tr>
+    <td>16</td>
+    <td>11</td>
+    <td>0</td>
+    <td>1</td>
+    <td>100%</td>
+    <td>11</td>
+    <td>0</td>
+    <td>1</td>
+    <td>100%</td>
+  </tr>
+  <tr>
+    <td>17</td>
+    <td>12</td>
+    <td>0</td>
+    <td>0</td>
+    <td>92%</td>
+    <td>11</td>
+    <td>1</td>
+    <td>0</td>
+    <td>100%</td>
+  </tr>
+  <tr>
+    <td>18</td>
+    <td>9</td>
+    <td>2</td>
+    <td>1</td>
+    <td>92%</td>
+    <td>8</td>
+    <td>4</td>
+    <td>0</td>
+    <td>92%</td>
+  </tr>
+  <tr>
+    <td>19</td>
+    <td>9</td>
+    <td>0</td>
+    <td>3</td>
+    <td>67%</td>
+    <td>6</td>
+    <td>1</td>
+    <td>5</td>
+    <td>92%</td>
+  </tr>
+  <tr>
+    <td>20</td>
+    <td>12</td>
+    <td>0</td>
+    <td>0</td>
+    <td>100%</td>
+    <td>12</td>
+    <td>0</td>
+    <td>0</td>
+    <td>100%</td>
+  </tr>
+  <tr>
+    <td>21</td>
+    <td>12</td>
+    <td>0</td>
+    <td>0</td>
+    <td>83%</td>
+    <td>12</td>
+    <td>0</td>
+    <td>0</td>
+    <td>83%</td>
+  </tr>
+  <tr>
+    <td>22</td>
+    <td>11</td>
+    <td>0</td>
+    <td>1</td>
+    <td>83%</td>
+    <td>10</td>
+    <td>0</td>
+    <td>2</td>
+    <td>92%</td>
+  </tr>
+  <tr>
+    <th></th>
+    <th colspan="3">Accuracy mean</th>
+    <th>72%</th>
+    <th colspan="3"th>Accuracy mean</th>
+    <th>91%</th>
+  </tr>
+</table>
 
 ## K-Means clustering
 
