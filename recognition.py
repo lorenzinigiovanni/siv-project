@@ -1,4 +1,6 @@
 from cv2 import cv2
+import math
+
 from utils import getColorMean, getHistogram
 
 
@@ -8,18 +10,26 @@ def recognitionByColor(sixths, beeColour, openCellColour, closeCellColour):
     for sixth in sixths:
         mean = getColorMean(sixth)
 
-        beeDifference = [e - mean[c] for c, e in enumerate(beeColour)]
-        openCellDifference = [e - mean[c]
-                              for c, e in enumerate(openCellColour)]
-        closeCellDifference = [e - mean[c]
-                               for c, e in enumerate(closeCellColour)]
+        beeSquare = math.inf
+        openCellSquare = math.inf
+        closeCellSquare = math.inf
 
-        beeSquare = beeDifference[0] ** 2 + \
-            beeDifference[1] ** 2 + beeDifference[2] ** 2
-        openCellSquare = openCellDifference[0] ** 2 + \
-            openCellDifference[1] ** 2 + openCellDifference[2] ** 2
-        closeCellSquare = closeCellDifference[0] ** 2 + \
-            closeCellDifference[1] ** 2 + closeCellDifference[2] ** 2
+        if beeColour is not [-1, -1, -1]:
+            beeDifference = [e - mean[c] for c, e in enumerate(beeColour)]
+            beeSquare = beeDifference[0] ** 2 + \
+                beeDifference[1] ** 2 + beeDifference[2] ** 2
+
+        if openCellColour is not [-1, -1, -1]:
+            openCellDifference = [e - mean[c]
+                                  for c, e in enumerate(openCellColour)]
+            openCellSquare = openCellDifference[0] ** 2 + \
+                openCellDifference[1] ** 2 + openCellDifference[2] ** 2
+
+        if closeCellColour is not [-1, -1, -1]:
+            closeCellDifference = [e - mean[c]
+                                   for c, e in enumerate(closeCellColour)]
+            closeCellSquare = closeCellDifference[0] ** 2 + \
+                closeCellDifference[1] ** 2 + closeCellDifference[2] ** 2
 
         if (beeSquare < openCellSquare and beeSquare < closeCellSquare):
             results.append("Bee")

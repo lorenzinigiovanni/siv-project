@@ -21,6 +21,9 @@ def getFeatureSampleAverageColour(image):
 
     cv2.destroyWindow("Select")
 
+    if (x, y) == (-1, -1):
+        return [-1, -1, -1]
+
     if (x < boxDim):
         x = boxDim / 2
 
