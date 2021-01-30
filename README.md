@@ -17,8 +17,9 @@
   - [Frame recognition](#frame-recognition-1)
   - [Color mean](#color-mean)
   - [Histogram comparison](#histogram-comparison)
-  - [Color means vs histogram comparison](#color-means-vs-histogram-comparison)
   - [K-Means clustering](#k-means-clustering)
+  - [Region growing](#region-growing)
+  - [Color means vs histogram comparison](#color-means-vs-histogram-comparison)
 
 <div class="page-break"></div>
 
@@ -77,7 +78,9 @@ It is possible to classify the content of the frame basing on various methodolog
 Herein are proposed three main paths that lead to the classification of each part of a frame.
 Before presenting each method, we wanted to give a general overview on how it’s possible to classify a subdivision of the frame.
 
- ## Recognition by color
+<div class="page-break"></div>
+
+## Recognition by color
 
 The underlying idea for this approach is to select an area of variable dimension that is associated for a matching class.
 Within this area it is possible to compute the sample mean.
@@ -85,6 +88,8 @@ Then, we also compute the sample mean for each of the sixths parts of the frame.
 
 Once we have these means measurements, we exploit these information by computing the mean squared error between the means of the selected samples and the means of the sixths.
 In this way it is possible to associate what’s mostly dominant in each of the subdivisions of the frame by taking the lowest value of the means squared error.
+
+<div class="page-break"></div>
 
 ## Recognition by histogram
 
@@ -104,6 +109,8 @@ In this example can be noticed by looking at the histograms that:
 
 ![Histogram S00 S21](/images/histogram-S-0-0-S-2-1.png)  
 *Histograms of the sixth<sub>0,0</sub> and of the sixth<sub>2,1</sub>*
+
+<div class="page-break"></div>
 
 ## Clustering
 
@@ -125,6 +132,8 @@ It is important to reiterate that the program does not know which class is which
 The program that has been implemented is subdivided into two principal parts.
 In the first one the recognition of the frame is performed, either in automatic mode or in manual mode and the image is geometrically corrected.
 The aim of the second one is to discriminate between the three classes present in the image.
+
+<div class="page-break"></div>
 
 ## Frame recognition
 
@@ -182,6 +191,8 @@ A perspective transform is calculated from four points and then a perspective tr
 
 Afterwards the process of class discrimination can begin.
 
+<div class="page-break"></div>
+
 ## Classes discrimination
 
 The operator has to identify the area corresponding to each class (with the possibility to skip one if it is not present) by clicking the left button of the mouse.
@@ -219,7 +230,12 @@ Before doing that a premise is needed. As explained before historically the fram
 Since for a program there is no substantial difference into making 6 or 100 parts we have embedded the possibility to modify the number of section of the frame, thus their dimensions.
 In the discussion below there will be some images subdivided in sixth and other in more parts in order to better analyze the behavior of the algorithms applied.
 
+<div class="page-break"></div>
+
 ## Frame recognition
+
+The automatic frame recognition doesn't work on all images, mostly due to bad images quality.
+We proposed a table in which we show the effective validity of the automatic frame recognition algorithm.
 
 | Image | Manual frame selection | Automatic frame recognition |
 | :---: | :--------------------: | :-------------------------: |
@@ -246,6 +262,7 @@ In the discussion below there will be some images subdivided in sixth and other 
 |  21   |        &#10003;        |          &#10005;           |
 |  22   |        &#10003;        |          &#10005;           |
 
+<div class="page-break"></div>
 
 ## Color mean
 
@@ -260,6 +277,8 @@ As it can be seen in the image below the first sixth is wrongly classified as "B
 
 ![Classification Color Mean](/images/classification-color-1000.png)  
 *Results of color mean method applied on small dimension areas*
+
+<div class="page-break"></div>
 
 ## Histogram comparison
 
@@ -277,11 +296,70 @@ For example, if in the selection of the open cell area we select an area with on
 ![Classification Histogram](/images/classification-histogram-1000.png)  
 *Results of histogram method applied on small dimension areas*
 
+<div class="page-break"></div>
+
+## K-Means clustering
+
+Some other technique that could be applied in order to classify the various areas consists in applying an unsupervised algorithm.
+The idea here was to treat the whole pixels in the image as if they are points in a cartesian space of the colors, and then let the K-Means clustering algorithm find associations, hence clustering them into three groups (one for each of the possible corresponding class).
+
+We tested the algorithm with various parameters for the converging criterion (number of iterations, final accuracy...), but none of the settings separated the regions successfully enough.
+This algorithm gave very poor results in the end. Still, we included the file for completeness, but we found it unusable.
+
+Here we tried the K-Means algorithm from the OpenCV framework:
+
+```python
+criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 2, 1.0)
+K = 3
+_, label, center = cv2.kmeans(Z, K, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
+```
+
+![K-means CV2 TERM_CRITERIA_EPS+TERM_CRITERIA_MAX_ITER max_iter=2 epsilon=1.0](/images/kmeans-CV2-TERM_CRITERIA_EPS+TERM_CRITERIA_MAX_ITER-2-1.0.png)  
+*K-means CV2 TERM_CRITERIA_EPS+TERM_CRITERIA_MAX_ITER max_iter=2 epsilon=1.0*
+
+Here instead we used the K-Means algorithm from the SciKit framework:
+
+```python
+kmeans = KMeans(n_clusters=3, random_state=0, tol=1e-1).fit(pic_n)
+```
+
+![K-means scikit n_clusters=3 random_state=0 tol=1e-1](/images/kmeans-scikit-n_clusters=3-random_state=0-tol=1e-1.png)  
+*K-means scikit n_clusters=3 random_state=0 tol=1e-1*
+
+Things change a little bit (but are still non satisfactory) if we try to blur a bit the image before applying the algorithm.
+
+![K-means scikit n_clusters=3 random_state=0 tol=1e-1 with blurred image](/images/kmeans-scikit-n_clusters=3-random_state=0-tol=1e-3-blurred-5-5.png)  
+*K-means scikit n_clusters=3 random_state=0 tol=1e-1 with blurred image*
+
+<div class="page-break"></div>
+
+## Region growing 
+
+We also tried an other kind of image segmentation approach which is the region growing. Substantially, an initial set of small areas are iteratively merged according to similarity constraints. The algorithm starts by choosing an arbitrary set of seed pixels, that will be compared with their own neighboring pixels. A region is grown from the seed pixel by adding in neighboring pixels that are similar, incresing the size of the region. This whole process is continued untill all pixels belong to some region.
+
+```shell
+$ python ./RegionGrowing.py dataset/02.png 12
+```
+
+![Region Growing](/images/region-growing.png)  
+*Region Growing*
+
+```shell
+$ python ./RegionGrowingSV.py dataset/02.png 12
+```
+
+![Region Growing SV](/images/region-growing-sv.png)  
+*Region Growing SV*
+
+This algorithm proven to be not only computationally hungry, but gave very poor results in the end.
+
+<div class="page-break"></div>
+
 ## Color means vs histogram comparison
 
 In the images showed below it can be appreciated the differences between the method that exploits the mean color and the one in which the histograms are compared.
 As it can be seen the histogram method is able to better discriminate the different classes.
-In this two images the size of the areas analyzed is very small.
+In this two images the size of the areas analyzed is small.
 Clearly there is a limit on the minimum size of the area in which the histogram operates in an efficient way.
 In fact is that the number of occurrences of a particular color can drastically drop as the area becomes tinier, leading the classifier to an uncertain decision, because it do not have enough information (think about the bees strips).
 
@@ -290,6 +368,10 @@ In fact is that the number of occurrences of a particular color can drastically 
 
 ![Classification Histogram](/images/classification-histogram-200.png)  
 *Results of histogram method applied on medium dimension area*
+
+Herein is reported a table containing all the comparison between the two main algorithms for all the images in our dataset.
+
+<div class="page-break"></div>
 
 <table>
   <tr>
@@ -559,10 +641,4 @@ In fact is that the number of occurrences of a particular color can drastically 
   </tr>
 </table>
 
-## K-Means clustering
-
-Some other technique that could be applied in order to classify the various areas consists in applying an unsupervised algorithm.
-The idea here was to treat the whole pixels in the image as if they are points in a cartesian space of the colors, and then let the K-Means clustering algorithm find associations, hence clustering them into three groups (one for each of the possible corresponding class).
-
-We also tried an other kind of image segmentation approach which was the region growing.
-Unfortunately, both of these algorithms proven to be not only computationally hungry, but gave very poor results in the end.
+It can be easily seen that the histogram comparison algorithm is far better than the color means algorithm.
