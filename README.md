@@ -78,8 +78,6 @@ It is possible to classify the content of the frame basing on various methodolog
 Herein are proposed three main paths that lead to the classification of each part of a frame.
 Before presenting each method, we wanted to give a general overview on how it’s possible to classify a subdivision of the frame.
 
-<div class="page-break"></div>
-
 ## Recognition by color
 
 The underlying idea for this approach is to select an area of variable dimension that is associated with a matching class.
@@ -117,7 +115,12 @@ In this example by looking at the histograms can be noticed that:
 The simplest approach to clustering is the k-means technique.
 It assumes that you decide at priori the number of clusters (k).
 Each example (or each cluster) will be represented by its mean μ<sub>i</sub>.
-Basically you want examples to be associated with the cluster with the closest mean.
+
+The process consist in:
+- initialize cluster means: μ<sub>1</sub>,...,μ<sub>k</sub>
+- iterate until convergence:
+  - assign each example to cluster with nearest mean;
+  - update cluster means according to assigned examples;
 
 With K-means the intrinsic idea is that we treat the whole image with unsupervised learning (as we of course have no label for each of the classes).
 Thus, it will be up to the algorithm to find whether certain types of examples are more similar to a particular cluster rather than another one.
@@ -132,8 +135,6 @@ It is important to reiterate that the program does not know which class is which
 The program that has been implemented is subdivided into two principal parts.
 In the first one the recognition of the frame is performed, either in automatic mode or in manual mode and the image is geometrically corrected.
 The aim of the second one is to discriminate between the three classes present in the image.
-
-<div class="page-break"></div>
 
 ## Frame recognition
 
@@ -219,7 +220,9 @@ elif (closeCellHistCorrelation > beeHistCorrelation and closeCellHistCorrelation
   results.append("Close")
 ```
 
-Then an overlay of the results is displayed assigning different colors to the classes for better visual distinction. Related counts-percentages are also shown in the terminal window.
+Then an overlay of the results is displayed assigning different colors to the classes for better visual distinction.
+We assigned blue as bees, green as opened cells and red as closed cells.
+Related counts-percentages are also shown in the terminal window.
 
 <div class="page-break"></div>
 
@@ -341,15 +344,13 @@ We also tried another kind of image segmentation approach, which is the region g
 $ python ./RegionGrowing.py dataset/02.png 12
 ```
 
-![Region Growing](/images/region-growing.png)  
-*Region Growing*
+![Region Growing](/images/region-growing.png)
 
 ```shell
 $ python ./RegionGrowingSV.py dataset/02.png 12
 ```
 
-![Region Growing SV](/images/region-growing-sv.png)  
-*Region Growing SV*
+![Region Growing SV](/images/region-growing-sv.png)
 
 This algorithm has proven to be not only computationally hungry, but gave very poor results in the end.
 
